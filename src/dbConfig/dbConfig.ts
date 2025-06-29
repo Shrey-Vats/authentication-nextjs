@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export async function Connection() {
+export async function Connect() {
 
     try {
         await mongoose.connect(process.env.MONGO_URL!)
