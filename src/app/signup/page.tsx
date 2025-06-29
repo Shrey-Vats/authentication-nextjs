@@ -1,29 +1,58 @@
 "use client";
 import Link from "next/link";
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {useRouter} from "next/navigation";
-import {axios} from "axios";
+import axios from "axios";
 import { FaUser } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { FaGoogle, FaGithub } from "react-icons/fa";
+import { ClipLoader } from "react-spinners"; // if using react-spinners
+import { Toaster, toast } from "react-hot-toast";
+
 
 export default function SignupPage() {
-    const [user, setUser] = React.useState({
-        name: "",
-        email: "",
-        password: "",
-    })
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
-    const onSignup = async ()=>{
+  const [user, setUser] = React.useState({
+      name: "",
+      email: "",
+      password: "",
+  });
 
+
+
+    async function onSignup (e: any){
+      e.preventDefault();
+      setIsLoading(true);
+
+      try {
+        console.log("User Data:", user);
+        
+        const response = await axios.post("/api/users/signup", user)
+        console.log("Response:", response.data);
+
+        await new Promise((res) => setTimeout(res, 2000));
+        setIsLoading(false);
+        toast.success("User created successfully");
+
+        router.push("/login");
+      } catch (error) {
+        console.error("Error during signup:", error);
+        setIsLoading(false);
+        toast.error( "Something went wrong");
+      }
     }
 
     return (
       <div className="flex items-center justify-center h-screen w-screen bg-gray-300">
         <div className="flex w-[850px] h-[80%] bg-white rounded-lg shadow-lg">
           <div className="h-[100%] w-3/5  rounded-r-lg ">
-            <form className="flex flex-col justify-center items-center p-10">
+            <form
+              className="flex flex-col justify-center items-center p-10"
+              onSubmit={onSignup}
+            >
               <div className="flex justify-center items-center w-[100%] mt-10">
                 <hr className="w-full bg-gray-900 px-4" />
                 <h2 className="text-2xl font-bold px-4">SignUp</h2>
@@ -36,16 +65,18 @@ export default function SignupPage() {
                   value={user.name}
                   onChange={(e) => setUser({ ...user, name: e.target.value })}
                   placeholder="Enter your name"
+                  required
                   className="w-full h-12 px-4 py-2 border border-l-0 rounded-r-lg outline-none"
                 />
               </div>
               <div className="flex mt-4">
                 <MdEmail className="h-12 w-12 p-2 border border-r-0 rounded-l-lg bg-gray-100 text-gray-600" />
                 <input
-                  type="text"
+                  type="email"
                   value={user.email}
                   onChange={(e) => setUser({ ...user, email: e.target.value })}
                   placeholder="Enter your email"
+                  required
                   className="w-full h-12 border border-l-0 px-4 py-2 outline-none rounded-r-lg"
                 />
               </div>
@@ -58,19 +89,35 @@ export default function SignupPage() {
                     setUser({ ...user, password: e.target.value })
                   }
                   placeholder="Enter your password"
+                  required
                   className="w-full h-12 px-4 py-2 border border-l-0 outline-none rounded-r-lg"
                 />
               </div>
               <button
                 type="submit"
-                className="bg-red-950 px-4 py-2 w-[200px] h-[40px] mt-8 rounded-lg text-white font-bold pointer"
+                disabled={isLoading}
+                className={`bg-red-950 px-4 py-2 w-[200px] h-[40px] mt-8 rounded-lg text-white font-bold transition-all duration-300 ease-in-out ${
+                  isLoading
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-red-800 hover:shadow-2xl hover:scale-105 active:scale-95"
+                }`}
               >
-                Sign Up
+                {isLoading ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <ClipLoader size={20} color="#fff" />
+                    Loading...
+                  </div>
+                ) : (
+                  "Sign Up"
+                )}
               </button>
             </form>
             <p className="text-center mt-4 text-sm text-gray-600">
               Already have an account?{" "}
-              <Link href={'/login'} className="text-blue-700 font-semibold cursor-pointer hover:underline">
+              <Link
+                href={"/login"}
+                className="text-blue-700 font-semibold cursor-pointer hover:underline"
+              >
                 Login
               </Link>
             </p>
@@ -94,8 +141,8 @@ export default function SignupPage() {
                 <span className="font-medium text-gray-800">GitHub</span>
               </div>
             </div>
-            
           </div>
+          <Toaster position="bottom-right" reverseOrder={false} />
         </div>
       </div>
     );
