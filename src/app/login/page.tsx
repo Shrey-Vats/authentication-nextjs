@@ -2,20 +2,41 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { axios } from "axios";
+import axios from "axios";
 import { FaUser } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { FaGoogle, FaGithub } from "react-icons/fa";
 import { on } from "events";
+import { ClipLoader } from "react-spinners"; // if using react-spinners
+import { Toaster, toast } from "react-hot-toast";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = React.useState({
     email: "",
     password: "",
   });
 
-  const onLogin = async () => {};
+  async function onLogin (e: any) {
+    e.preventDefault();
+    setIsLoading(true)
+
+    try {
+      console.log("User Data:" + user)
+
+      const response = await axios.post("/api/users/login", user)
+      console.log("Response:", response.data);
+
+      setIsLoading(false);
+      toast.success("Login successful");
+    } catch (error) {
+      console.error("Error during login:", error);
+      setIsLoading(false);
+      toast.error("Something went wrong");
+    }
+  };
 
   return (
     <div className="flex items-center justify-center h-screen w-screen bg-gray-300">
@@ -52,9 +73,21 @@ export default function LoginPage() {
             </div>
             <button
               type="submit"
-              className="bg-red-950 px-4 py-2 w-[200px] h-[40px] mt-8 rounded-lg text-white font-bold pointer"
+              disabled={isLoading}
+              className={`bg-red-950 px-4 py-2 w-[200px] h-[40px] mt-8 rounded-lg text-white font-bold transition-all duration-300 ease-in-out ${
+                isLoading
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-red-800 hover:shadow-2xl hover:scale-105 active:scale-95"
+              }`}
             >
-              Sign Up
+              {isLoading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <ClipLoader size={20} color="#fff" />
+                  Loading...
+                </div>
+              ) : (
+                "Login"
+              )}
             </button>
           </form>
           <p className="text-center mt-2 text-sm text-gray-600">
@@ -86,6 +119,7 @@ export default function LoginPage() {
           </div>
         </div>
         <div className="h-[100%] w-2/5 bg-gray-200 backdrop-blur-lg rounded-r-lg"></div>
+              <Toaster position="bottom-right" reverseOrder={false} />
       </div>
     </div>
   );
