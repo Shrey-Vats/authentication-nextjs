@@ -4,6 +4,7 @@ import { NextResponse, NextRequest } from 'next/server'
 import bcrypt from 'bcryptjs'
 import {z} from 'zod'
 import { signUpSchema } from '@/lib/validations/authSchemas'
+import { sendEmail } from '@/helpers/mailer'
 
 Connect();
 
@@ -36,11 +37,17 @@ export async function POST(request: NextRequest) {
 
         const savedUser = await newUser.save()
 
-        return NextResponse.json({
+        await sendEmail({email, emailType: "VERIFY", userId: savedUser._id})
+
+        const response =  NextResponse.json({
             message: "User created successfully",
             success: true,
             savedUser: savedUser,
         }, {status: 201})
+
+        response.cookies.set("id", savedUser._id, {
+            httpOnly: true,
+        })
 
     } catch (error) {
         return NextResponse.json({error: "Internal Server Error"}, {status: 500})
