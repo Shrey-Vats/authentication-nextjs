@@ -4,18 +4,32 @@ import { MdEmail } from "react-icons/md";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { ClipLoader } from "react-spinners";
 import { FiLogOut } from "react-icons/fi";
-import React from "react";
+import React,{useEffect, useState} from "react";
 import axios from "axios";
 import { Toaster, toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = React.useState(false);
-  const router = useRouter()
+  const [userData, setUserData] = React.useState("");
+
+  
+  async function getUserDetails() {
+      const user = await axios.get("/api/users/me")
+      setUserData(user.data.data);
+    }
+
+  useEffect(()=>{
+    getUserDetails();
+  }, [])
+
+  useEffect(()=>{
+    console.log("User Data:", userData);
+  }, [userData])
 
   async function logout() {
     try {
-
       setIsLoading(true);
       const response = await axios.get("/api/users/logout");
       console.log("Response:", response.data);
@@ -63,13 +77,17 @@ export default function ProfilePage() {
               <div className="flex items-center justify-center mt-10">
                 <FaUser className="h-12 w-12 p-3  border border-r-0 bg-gray-50 text-gray-600 rounded-l-xl" />
                 <p className="h-12 w-[200px] text-xl border border-l-0 rounded-r-xl px-4 py-2  flex">
-                  User Name
+                  {userData && (userData as any).name
+                    ? (userData as any).name
+                    : "Loading..."}
                 </p>
               </div>
               <div className="flex items-center justify-center mt-2">
                 <MdEmail className="h-12 w-12 p-3  border border-r-0 bg-gray-50 text-gray-600 rounded-l-xl" />
                 <p className="h-12 w-[200px] text-xl border border-l-0 rounded-r-xl px-4 py-2  flex">
-                  User Email
+                  {userData && (userData as any).email
+                    ? (userData as any).email
+                    : "Loading..."}
                 </p>
               </div>
               <div className="flex items-center justify-center mt-2">
