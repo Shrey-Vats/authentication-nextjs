@@ -36,7 +36,7 @@ export const sendEmail = async({email, emailType, userId}:any) => {
           pass: process.env.EMAIL_PASSWORD,
         },
       });
-      const link = process.env.DOMAIN + '/verifyemail/' + hashedToken;
+      const link = `${process.env.DOMAIN}/verifyemail?token=${hashedToken}`;
 
 
       const mailOptions = {

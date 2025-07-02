@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
         const user = await User.findOne({email: email.trim().toLowerCase()})
 
         if(user){
-            return NextResponse.json({error: "User already exits with this email"}, {status: 400})
+            return NextResponse.json({error: "User already exits with this email"}, {status: 401})
         }
 
         //hash password
@@ -52,6 +52,8 @@ export async function POST(request: NextRequest) {
         response.cookies.set("id", savedUser._id, {
             httpOnly: true,
         })
+
+        return response
 
     } catch (error) {
         return NextResponse.json({error: "Internal Server Error"}, {status: 500})

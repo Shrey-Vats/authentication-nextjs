@@ -33,7 +33,6 @@ export default function SignupPage() {
         const response = await axios.post("/api/users/signup", user)
         console.log("Response:", response.data);
 
-        await new Promise((res) => setTimeout(res, 2000));
         setIsLoading(false);
         toast.success("User created successfully");
 
