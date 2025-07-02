@@ -7,9 +7,11 @@ import { FiLogOut } from "react-icons/fi";
 import React from "react";
 import axios from "axios";
 import { Toaster, toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
   const [isLoading, setIsLoading] = React.useState(false);
+  const router = useRouter()
 
   async function logout() {
     try {
@@ -19,8 +21,9 @@ export default function ProfilePage() {
       console.log("Response:", response.data);
       setIsLoading(false);
       toast.success("Logout successful");
+     router.push("/login")
 
-    } catch (error) {
+    } catch (error:any) {
       console.error("Logout failed:", error); 
     }
   }
@@ -29,11 +32,10 @@ export default function ProfilePage() {
       <div className="flex w-[850px] h-[80%] bg-white rounded-lg shadow-lg">
         <div className="h-[100%] w-1/10 bg-gray-200 rounded-l-lg"></div>
         <div className="h-[100%] w-8/10 bg-white rounded-r-lg flex flex-col">
-          <div className="bg-gray-300 relative h-[10%] w-full">
+          <div className=" relative h-[10%] w-full">
             <button
-              className={`absolute right-5 top-3 w-[160px] h-[40px]  bg-blue-500 rounded-2xl flex items-center ${
-                isLoading ? "cursor-not-allowed opacity-50" : "bg-blue-500"
-              }`}
+              className={`absolute right-5 top-3 w-[160px] h-[40px]  bg-blue-500 rounded-2xl flex items-center cursor-pointer
+ ${isLoading ? "cursor-not-allowed opacity-50" : "bg-blue-500"}`}
               onClick={logout}
             >
               {isLoading ? (

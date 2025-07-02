@@ -2,7 +2,7 @@ import { FaUser } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordLine } from "react-icons/ri";
 
-export default function UserProfile({params}: any) {
+export default function UserProfile({params}: {params: { id: string }}) {
   return (
     <div className="flex items-center justify-center h-screen w-screen bg-gray-300">
       <div className="flex w-[850px] h-[80%] bg-white rounded-lg shadow-lg">
