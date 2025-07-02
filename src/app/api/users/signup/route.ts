@@ -2,7 +2,6 @@ import {Connect} from '@/dbConfig/dbConfig'
 import User from '@/models/userModel'
 import { NextResponse, NextRequest } from 'next/server'
 import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
 import {z} from 'zod'
 import { signUpSchema } from '@/lib/validations/authSchemas'
 
@@ -40,7 +39,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({
             message: "User created successfully",
             success: true,
-            savedUser
+            savedUser: savedUser,
         }, {status: 201})
 
     } catch (error) {
