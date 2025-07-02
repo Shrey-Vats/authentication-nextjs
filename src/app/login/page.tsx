@@ -13,6 +13,7 @@ import { Toaster, toast } from "react-hot-toast";
 
 export default function LoginPage() {
   const router = useRouter();
+
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = React.useState({
     email: "",
@@ -31,6 +32,7 @@ export default function LoginPage() {
 
       setIsLoading(false);
       toast.success("Login successful");
+      router.push("/profile");
     } catch (error) {
       console.error("Error during login:", error);
       setIsLoading(false);
