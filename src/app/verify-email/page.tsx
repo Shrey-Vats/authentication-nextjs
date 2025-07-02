@@ -1,13 +1,17 @@
 'use client';
 import { MdMarkEmailUnread } from "react-icons/md";
 import React, { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import axios from "axios";
 import { Toaster, toast } from "react-hot-toast";
 
 export default function VerifyEmailPage() {
     const router = useRouter();
     const [isVerified, setIsVerified] = React.useState(false);
+
+    const redirectToLogin = () => {
+        router.push("/login");
+    };
     
     useEffect(()=>{
         const callBackend = setInterval(async ()=>{
@@ -38,7 +42,7 @@ export default function VerifyEmailPage() {
             We’ve sent a verification link to your email. Please click on the
             link to verify your account and continue.
           </p>
-          <p className="mt-4 text-sm text-gray-500 flex mb-10">
+          <p className="mt-4 text-sm text-gray-500 flex mb-10" onClick={redirectToLogin}>
             Don't Receved Email?
              <span className="text-blue-600 cursor-pointer hover:underline">
               Try again

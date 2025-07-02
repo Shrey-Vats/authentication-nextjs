@@ -16,7 +16,11 @@ export async function POST(request: NextRequest) {
         const result = signUpSchema.safeParse(reqBody);
 
         if (!result.success) {
-            return NextResponse.json({error: result.error.errors[0].message}, {status: 400})
+            return NextResponse.json({
+                error: result.error.errors[0].message,
+                message: "error on validation"
+
+            }, {status: 400})
         }
 
         const user = await User.findOne({email: email.trim().toLowerCase()})
