@@ -1,5 +1,8 @@
-finally, complete almost completre the project.
-✅ register page,
-✅ login page ,
-✅ prolile page,
-🔄 reset paaword : - a fwe logic left which will build later
+## ✅ Project Progress Update
+
+Finally, the project is almost complete! Here's what's done so far:
+
+- ✅ **Register Page** – Completed  
+- ✅ **Login Page** – Completed  
+- ✅ **Profile Page** – Completed  
+- 🔄 **Reset Password** – A few logic parts are still pending and will be added later
